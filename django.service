@@ -1,0 +1,23 @@
+[Unit]
+Description=Gunicorn instance to serve itmVentas Taller
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/home/ubuntu/itmVentas
+Environment="PATH=/home/ubuntu/itmVentasenv/bin"
+ExecStart=/home/ubuntu/itmVentasenv/bin/gunicorn \
+	  --log-level info \
+	  --workers 3 \
+	  --bind 0.0.0.0:8000 \
+	  --access-logfile /ebsdjango/aqexio/logs/gunicorn_access.log   \
+	  --error-logfile  /ebsdjango/aqexio/logs/gunicorn_error.log   \
+	  --max-requests 1200 \
+	  --timeout 20 \
+	  --access-logformat '"%({x-forwarded-for}i)s" %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"' \
+	  -m 007 goVentas.wsgi --preload
+
+[Install]
+WantedBy=multi-user.target
+
